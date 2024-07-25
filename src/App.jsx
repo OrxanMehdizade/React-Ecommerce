@@ -1,20 +1,10 @@
-import React, { useState } from 'react';
-import './App.css';
-function App() {
-  const [clicked, setClicked] = useState(false);
+import Navbar from "./components/Navbar"
 
-  const handleClick = () => {
-    setClicked(true);
-  };
+function App() {
+
 
   return (
-    <div className="App">
-      <header className="App-header">
-        <p className={clicked ? 'clicked' : ''} onClick={handleClick}>
-          salam
-        </p>
-      </header>
-    </div>
+    <Navbar></Navbar>
   );
 }
 
