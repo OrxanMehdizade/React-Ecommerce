@@ -11,7 +11,7 @@ function App() {
     <div className="App">
       <header className="App-header">
         <p className={clicked ? 'clicked' : ''} onClick={handleClick}>
-          Axlımızı geri qaytar gülay xanım
+          salam
         </p>
       </header>
     </div>
