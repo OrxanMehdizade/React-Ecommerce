@@ -4,8 +4,8 @@ import Products from "./components/Products";
 const Homepage = () => {
   return (
     <div className="w-full flex flex-col items-center">
-        <Navbar />
-        <Products />
+      <Navbar />
+      <Products />
     </div>
   )
 }
