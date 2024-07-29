@@ -1,13 +1,13 @@
-import { useState } from 'react';
+import { useState,useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import  secureLocalStorage  from  "react-secure-storage";
+import { Context } from '../../Context';
 
 const Login = () => {
     const [formData, setFormData] = useState({})
+    const {accessToken,setAccessToken}=useContext(Context)
     const navigate = useNavigate();
-
     const login = async () => {
         const response = await fetch("http://localhost:5000/auth/login",
             {
@@ -21,7 +21,8 @@ const Login = () => {
         if (response.ok) {
             toast.success("Login Successful")
             const data = await response.json();
-            secureLocalStorage.setItem("accessToken", data.accessToken);
+            setAccessToken(data.accessToken);
+            //secureLocalStorage.setItem("accessToken", data.accessToken);
             console.log(data);
         } else {
             toast.error("Login failed")

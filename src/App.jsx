@@ -1,23 +1,36 @@
-import { Route, Routes } from "react-router-dom";
+import { Route, Routes, useNavigate } from "react-router-dom";
 import Homepage from "./Homepage";
 import Register from "./components/Auth/Register";
 import Login from "./components/Auth/Login";
-import  secureLocalStorage  from  "react-secure-storage";
-import { useEffect, useState } from "react";
+import secureLocalStorage from "react-secure-storage";
+import { useEffect, useState,useContext } from "react";
+import { Context } from './Context';
 
 function App() {
-  const [isLoggedIn,setIsLoggedIn]=useState(false);
+  const {accessToken,setAccessToken}=useContext(Context);
+  const navigate = useNavigate();
 
-  useEffect(()=>{
-    const status= secureLocalStorage.getItem("accessToken");
-    setIsLoggedIn(status);
-  },[]);
-  
+
+  useEffect(() => {
+    if (accessToken) {
+      navigate("/home");
+    } else {
+      navigate("/");
+    }
+  }, [accessToken]);
+
   return (
     <Routes>
-      <Route path="/" element={<Login />} />
-      <Route path="/register" element={<Register />} />
-      <Route path="/home" element={<Homepage />} />
+      {accessToken ? (
+        <>
+          <Route path="/home" element={<Homepage />} />
+        </>
+      ) : (
+        <>
+          <Route path="/" element={<Login />} />
+          <Route path="/register" element={<Register />} />
+        </>
+      )}
     </Routes>
   );
 }

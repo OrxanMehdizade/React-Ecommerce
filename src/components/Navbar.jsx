@@ -1,22 +1,23 @@
 import navIcon from "../assets/navbar-icon.svg";
+import exitIcon from "../assets/exit.png";
 import NavBarItem from "./NavbarItem";
-const itemArray = [
-  { titel: "Home" },
-  { titel: "About" },
-  { titel: "Contact" },
-];
+import secureLocalStorage from "react-secure-storage";
+import { Context } from "../Context";
+import { useContext } from "react";
+
+const itemArray = [{ title: "Home" }, { title: "About" }, { title: "Contact" }];
 
 const Navbar = () => {
-
+  const { accessToken, setAccessToken } = useContext(Context)
   return (
     <nav className="w-full bg-white border-gray-200 dark:bg-gray-900">
-      <div className="max-w-screen-xl flex flex-wrap items-center justify-between mx-auto p-4">
+      <div className="max-w-screen-xl flex items-center justify-between mx-auto p-4">
         <ul className="flex flex-col p-4 md:p-0 mt-4 font-medium border border-gray-100 rounded-lg bg-gray-50 md:space-x-8 rtl:space-x-reverse md:flex-row md:mt-0 md:border-0 md:bg-white dark:bg-gray-800 md:dark:bg-gray-900 dark:border-gray-700">
           {itemArray.map((item) => (
-            <NavBarItem key={item.titel} titel={item.titel} />
+            <NavBarItem key={item.title} title={item.title} />
           ))}
         </ul>
-        <div className="flex md:order-2">
+        <div className="flex md:order-2 items-center">
           <button
             type="button"
             data-collapse-toggle="navbar-search"
@@ -64,10 +65,17 @@ const Navbar = () => {
             <input
               type="text"
               id="search-navbar"
-              className="block w-full p-2 ps-10 text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-green-400 focus:border-green-400 "
+              className="block w-full p-2 ps-10 text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-green-400 focus:border-green-400 dark:bg-gray-700 dark:border-gray-600 dark:text-white"
               placeholder="Search..."
             />
           </div>
+
+          <button
+            onClick={() => setAccessToken(null)}
+            className="flex items-center ms-2"
+          >
+            <img src={exitIcon} alt="Exit Icon" className="w-8 h-10" />
+          </button>
 
           <button
             data-collapse-toggle="navbar-search"
@@ -95,7 +103,7 @@ const Navbar = () => {
           </button>
         </div>
 
-        <a href="https://flowbite.com/">
+        <a href="https://flowbite.com/" className="flex items-center">
           <img src={navIcon} className="h-8" alt="Flowbite Logo" />
         </a>
 
@@ -103,7 +111,7 @@ const Navbar = () => {
           className="items-center justify-between flex w-full md:hidden md:w-auto md:order-1"
           id="navbar-search"
         >
-          <div className="relative mt-3 md:hidden">
+          <div className="relative mt-3">
             <div className="absolute inset-y-0 start-0 flex items-center ps-3 pointer-events-none">
               <svg
                 className="w-4 h-4 text-gray-500 dark:text-gray-400"
@@ -128,6 +136,15 @@ const Navbar = () => {
               placeholder="Search..."
             />
           </div>
+
+          <button
+            onClick={() => {
+              document.cookie = "";
+              //secureLocalStorage.getItem("accessToken");
+            }}
+          >
+            <img src={exitIcon} alt="Exit Icon" className="w-6 h-6" />
+          </button>
         </div>
       </div>
     </nav>
