@@ -1,14 +1,19 @@
 import navIcon from "../assets/navbar-icon.svg";
 import exitIcon from "../assets/exit.png";
 import NavBarItem from "./NavbarItem";
-import secureLocalStorage from "react-secure-storage";
-import { Context } from "../Context";
 import { useContext } from "react";
+import { Context } from "../Context";
 
 const itemArray = [{ title: "Home" }, { title: "About" }, { title: "Contact" }];
 
 const Navbar = () => {
-  const { accessToken, setAccessToken } = useContext(Context)
+  const { setTrigger } = useContext(Context);
+  const handleLogout = () => {
+    document.cookie = `accessToken=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;`;
+    document.cookie = `refreshToken=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;`;
+    setTrigger((prevState) => !prevState);
+  };
+
   return (
     <nav className="w-full bg-white border-gray-200 dark:bg-gray-900">
       <div className="max-w-screen-xl flex items-center justify-between mx-auto p-4">
@@ -70,10 +75,7 @@ const Navbar = () => {
             />
           </div>
 
-          <button
-            onClick={() => setAccessToken(null)}
-            className="flex items-center ms-2"
-          >
+          <button onClick={handleLogout} className="flex items-center ms-2">
             <img src={exitIcon} alt="Exit Icon" className="w-8 h-10" />
           </button>
 
@@ -136,15 +138,6 @@ const Navbar = () => {
               placeholder="Search..."
             />
           </div>
-
-          <button
-            onClick={() => {
-              document.cookie = "";
-              //secureLocalStorage.getItem("accessToken");
-            }}
-          >
-            <img src={exitIcon} alt="Exit Icon" className="w-6 h-6" />
-          </button>
         </div>
       </div>
     </nav>

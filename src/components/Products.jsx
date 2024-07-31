@@ -17,7 +17,9 @@ const Products = () => {
     };
     getProducts();
   }, []);
+
   console.log(products);
+ 
   return (
 
     <div className="w-full max-w-screen-xl grid grid-cols-3 gap-6 mt-[50px]">
