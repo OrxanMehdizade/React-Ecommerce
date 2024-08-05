@@ -21,7 +21,7 @@ export const ContextProvider = ({ children }) => {
     });
 
     const ok=response.ok;
-
+    console.log(response);
     if(ok){
       const data= await response.json();
 
