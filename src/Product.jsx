@@ -22,10 +22,11 @@ const Product = () => {
           },
         }
       );
+      console.log(response);
       if (response.ok) {
         const data = await response.json();
+        setSelectedImage(data?.gallery[0]);
         setProduct(data);
-        setSelectedImage(data.gallery[0]); // Set the first image as default selected
       } else if (response.status === 401) {
         const status = refreshTokens();
         setRefreshed(status);
@@ -47,107 +48,92 @@ const Product = () => {
   };
 
   return (
-    <div className="p-4 max-w-4xl mx-auto mt-[40px] border-2 border-green-500 custom-shadow-green-500 bg-white shadow-lg rounded-lg">
-      <div className="overflow-hidden">
-        <div className="flex flex-col md:flex-row">
-          {/* Image Gallery */}
-          <div className="flex-shrink-0 md:w-1/3">
-            <div className="relative w-full aspect-w-16 aspect-h-9">
+    <div className="w-full flex justify-between p-16">
+      <div className="flex gap-4">
+        <div>
+          {Array.isArray(product.gallery) &&
+            product.gallery.length > 0 &&
+            product.gallery.map((image, index) => (
               <img
-                src={selectedImage}
-                alt={product.title}
-                className="object-cover w-full h-full"
+                key={index}
+                src={image}
+                alt={`${product.title} ${index}`}
+                className={`cursor-pointer size-[100px] object-contain border-[1px] border-zinc-400" ${
+                  selectedImage === image ? "border-2 border-green-500" : ""
+                }`}
+                onClick={() => setSelectedImage(image)}
               />
-            </div>
-            <div className="mt-4 flex overflow-x-auto space-x-2">
-              {Array.isArray(product.gallery) &&
-                product.gallery.length > 0 &&
-                product.gallery.map((image, index) => (
-                  <img
-                    key={index}
-                    src={image}
-                    alt={`${product.title} ${index}`}
-                    className={`cursor-pointer w-20 h-20 object-cover ${
-                      selectedImage === image ? "border-2 border-green-500" : ""
-                    }`}
-                    onClick={() => setSelectedImage(image)}
-                  />
-                ))}
-            </div>
-          </div>
+            ))}
+        </div>
+        <img
+          className="w-[550px] h-[450px] object-contain border-[1px] border-zinc-400"
+          src={selectedImage}
+          alt="This image was not found."
+        />
+      </div>
 
-          {/* Product Details */}
-          <div className="md:ml-6 mt-4 md:mt-0 flex-grow">
-            <h1 className="text-3xl font-extrabold text-green-500">
-              {product.title}
-            </h1>
-
-            <p className="mt-2 text-lg text-green-800">
-              {product.description}
-            </p>
-
-
-            <div className="mt-4 flex items-center space-x-6">
-              <div>
-                <p className="text-sm font-medium text-green-700">Category:</p>
-                <p className="text-md font-semibold text-green-500">
-                  {product.category}
-                </p>
-              </div>
-
-              <div>
-                <p className="text-sm font-medium text-green-700">Stock:</p>
-                <p
-                  className={`text-md font-semibold ${
-                    product.stock > 0 ? "text-green-500" : "text-red-600"
-                  }`}
-                >
-                  {product.stock > 0
-                    ? `${product.stock} in stock`
-                    : "Out of stock"}
-                </p>
-              </div>
-            </div>
-
-            <div className="mt-4">
-              <div className="mb-2 p-2 border border-green-500 rounded-lg shadow-sm custom-shadow-green-500">
-                <p className="text-sm text-green-600 font-semibold">Size:</p>
-                <div className="flex flex-wrap">
-                  {product.itemOptions &&
-                    product.itemOptions.map((option, index) => (
-                      <button
-                        key={index}
-                        className={`mr-2 mb-2 px-4 py-2 border rounded-lg ${
-                          selectedSize === option.size
-                            ? "bg-green-500 text-white"
-                            : "bg-gray-200 text-gray-800"
-                        }`}
-                        onClick={() => setSelectedSize(option.size)}
-                      >
-                        {option.size}
-                      </button>
-                    ))}
-                </div>
-              </div>
-
-              <div className="mb-2 p-2 border border-green-500 rounded-lg shadow-sm custom-shadow-green-500">
-                <p className="text-sm text-green-600 font-semibold">Color:</p>
-                <div className="flex flex-wrap">
-                  {selectedSize &&
-                    getColorsForSize(selectedSize).map((color, idx) => (
-                      <ColorTag key={idx} color={color} />
-                    ))}
-                </div>
-              </div>
-            </div>
-
-            <div className="mt-4 flex items-center space-x-4 mb-4">
-              <p className="text-2xl font-bold text-green-600">
-                {product.price} {product.currency}
+      <div className="w-1/3 flex flex-col justify-between">
+        <h2 className="text-4xl mt-5 font-bold">{product.title}</h2>
+        <div className="mb-24">
+          <p className="text-lg font-light mb-3 mt-8">{product.description}</p>
+          <p className="text-xl mt-3">
+            {product.price} {product.currency}
+          </p>
+          <div className="mt-4 flex items-center space-x-6">
+            <div>
+              <p className="text-sm font-medium text-green-700">Category:</p>
+              <p className="text-md font-semibold text-green-500">
+                {product.category}
               </p>
             </div>
 
+            <div>
+              <p className="text-sm font-medium text-green-700">Stock:</p>
+              <p
+                className={`text-md font-semibold ${
+                  product.stock > 0 ? "text-green-500" : "text-red-600"
+                }`}
+              >
+                {product.stock > 0
+                  ? `${product.stock} in stock`
+                  : "Out of stock"}
+              </p>
+            </div>
           </div>
+          <div className="mt-4">
+            <div className="mb-2 p-2 border border-green-500 rounded-lg shadow-sm custom-shadow-green-500">
+              <p className="text-sm text-green-600 font-semibold">Size:</p>
+              <div className="flex flex-wrap">
+                {product.itemOptions &&
+                  product.itemOptions.map((option, index) => (
+                    <button
+                      key={index}
+                      className={`mr-2 mb-2 px-4 py-2 border rounded-lg ${
+                        selectedSize === option.size
+                          ? "bg-green-500 text-white"
+                          : "bg-gray-200 text-gray-800"
+                      }`}
+                      onClick={() => setSelectedSize(option.size)}
+                    >
+                      {option.size}
+                    </button>
+                  ))}
+              </div>
+            </div>
+
+            <div className="mb-2 p-2 border border-green-500 rounded-lg shadow-sm custom-shadow-green-500">
+              <p className="text-sm text-green-600 font-semibold">Color:</p>
+              <div className="flex flex-wrap">
+                {selectedSize &&
+                  getColorsForSize(selectedSize).map((color, idx) => (
+                    <ColorTag key={idx} color={color} />
+                  ))}
+              </div>
+            </div>
+          </div>
+          <button className="bg-emerald-400 px-6 py-3 text-white">
+            Add to card
+          </button>
         </div>
       </div>
     </div>

@@ -1,16 +1,25 @@
 import navIcon from "../assets/navbar-icon.svg";
 import exitIcon from "../assets/exit.png";
+import cartIcon from "../assets/Card.svg";
 import NavBarItem from "./NavbarItem";
 import { useContext } from "react";
 import { Context } from "../Context";
+import { useCookies } from "react-cookie";
+import { useNavigate } from "react-router-dom";
 
 const itemArray = [{ title: "Home" }, { title: "About" }, { title: "Contact" }];
 
 const Navbar = () => {
-  const { setTrigger } = useContext(Context);
+  const { trigger, setTrigger } = useContext(Context);
+  const navigate = useNavigate();
+  const [cookies, setCookie] = useCookies(["accessToken", "refreshToken"]);
+
   const handleLogout = () => {
-    document.cookie = `accessToken=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;`;
-    document.cookie = `refreshToken=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;`;
+    //document.cookie = `accessToken=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;`;
+    //document.cookie = `refreshToken=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;`;
+    setCookie("accessToken", "");
+    setCookie("refreshToken", "");
+
     setTrigger((prevState) => !prevState);
   };
 
@@ -47,7 +56,14 @@ const Navbar = () => {
             </svg>
             <span className="sr-only">Search</span>
           </button>
-
+          <button
+            onClick={() => {
+              navigate("/cart");
+            }}
+            className="mr-4"
+          >
+            <img src={cartIcon} alt="This image was not found." />
+          </button>
           <div className="relative hidden md:block">
             <div className="absolute inset-y-0 start-0 flex items-center ps-3 pointer-events-none">
               <svg

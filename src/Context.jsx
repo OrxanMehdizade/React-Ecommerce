@@ -8,7 +8,11 @@ export const ContextProvider = ({ children }) => {
   const [trigger,setTrigger]=useState(false);
 
   const refreshTokens = async ()=> {
-    const refreshToken=document.cookie.split("=")[1];
+    //console.log(document.cookie);
+    //const refreshToken=document.cookie.split("=")[1];
+
+    const token= document.cookie.split("; ")[1];
+    const refreshToken=token.split("=")[1];
 
     const response=await fetch("http://localhost:5000/auth/refresh",{
       method:"POST",
@@ -36,7 +40,11 @@ export const ContextProvider = ({ children }) => {
   };
 
   useEffect(()=>{
-    const authorized=document.cookie.split("=")[1];
+    //const authorized=document.cookie.split("=")[1];
+
+    const accessToken= document.cookie.split("; ")[0];
+    const authorized=accessToken.split("=")[1];
+    
     setIsLoggedIn(Boolean(authorized));
   },[trigger]);
 

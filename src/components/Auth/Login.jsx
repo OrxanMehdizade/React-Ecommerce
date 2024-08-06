@@ -3,13 +3,14 @@ import { useNavigate } from "react-router-dom";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { Context } from "../../Context";
-
+import { useCookies } from 'react-cookie';
 
 const Login = () => {
   const [formData, setFormData] = useState({});
-  const { setTrigger } = useContext(Context);
+  const {trigger, setTrigger } = useContext(Context);
   const [rememberMe, setRememberMe] = useState(false);
   const navigate = useNavigate();
+  const [cookies, setCookie] = useCookies(["accessToken","refreshToken"]);
   const login = async () => {
     const response = await fetch("http://localhost:5000/auth/login", {
       method: "POST",
@@ -22,8 +23,10 @@ const Login = () => {
     if (response.ok) {
       toast.success("Login Successful");
       const data = await response.json();
-      document.cookie = `accessToken=${data.accessToken}`;
-      document.cookie = `refreshToken=${data.refreshToken}`;
+      setCookie("accessToken",data.accessToken);
+      setCookie("refreshToken",data.refreshToken);
+      //document.cookie = `accessToken=${data.accessToken}`;
+      //document.cookie = `refreshToken=${data.refreshToken}`;
       
       if(rememberMe) {
         secureLocalStorage.setItem("accessToken", data.accessToken);

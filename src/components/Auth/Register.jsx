@@ -143,7 +143,7 @@ const Register = () => {
               Already hav an account?{" "}
               <button
                 onClick={() => {
-                  navigate("/");
+                  navigate("/login");
                 }}
                 className="text-green-700 hover:underline dark:text-green-500"
               >
